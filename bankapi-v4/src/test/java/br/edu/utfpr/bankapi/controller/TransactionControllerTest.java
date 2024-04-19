@@ -96,4 +96,128 @@ class TransactionControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath(
                         "$.amount", Matchers.equalTo(200)));
     }
+
+    //Teste withdraw
+    @Test
+    void deveriaRetornarStatus400ParaRequisicaoDeWithdrawInvalida() throws Exception {
+        // ARRANGE
+        var json = "{}"; // Body inválido
+
+        // ACT
+        var res = mvc.perform(
+                MockMvcRequestBuilders.post("/transaction/withdraw")
+                        .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // ASSERT
+        Assertions.assertEquals(400, res.getStatus());
+    }
+
+    @Test
+    void deveriaRetornarStatus201ParaRequisicaoDeWithdrawOK() throws Exception {
+        // ARRANGE
+
+        var json = """
+                {
+                    "sourceAccountNumber": 12346,
+                    "amount": 200
+                }
+                    """;
+
+        // ACT
+        var res = mvc.perform(
+                MockMvcRequestBuilders.post("/transaction/withdraw")
+                        .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // ASSERT
+        Assertions.assertEquals(201, res.getStatus());
+        Assertions.assertEquals("application/json", res.getContentType());
+    }
+
+    @Test
+    void deveriaRetornarDadosCorretosNoJsonDeWithdraw() throws Exception {
+        // ARRANGE
+        var json = """
+                {
+                    "sourceAccountNumber": 12346,
+                    "amount": 200
+                }
+                    """;
+
+        // ACT + ASSERT
+        var res = mvc.perform(
+                MockMvcRequestBuilders.post("/transaction/withdraw")
+                        .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath(
+                        "$.sourceAccountNumber.number",
+                        Matchers.equalTo(12346)))
+                .andExpect(MockMvcResultMatchers.jsonPath(
+                        "$.amount", Matchers.equalTo(200)));
+    }
+
+    //Teste transfer
+    @Test
+    void deveriaRetornarStatus400ParaRequisicaoDeTransferInvalida() throws Exception {
+        // ARRANGE
+        var json = "{}"; // Body inválido
+
+        // ACT
+        var res = mvc.perform(
+                MockMvcRequestBuilders.post("/transaction/transfer")
+                        .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // ASSERT
+        Assertions.assertEquals(400, res.getStatus());
+    }
+
+    @Test
+    void deveriaRetornarStatus201ParaRequisicaoTransferOK() throws Exception {
+        // ARRANGE
+
+        var json = """
+                {
+                    "sourceAccountNumber": 12345,
+                    "receiverAccountNumber": 12346,
+                    "amount": 200
+                }
+                    """;
+
+        // ACT
+        var res = mvc.perform(
+                MockMvcRequestBuilders.post("/transaction/transfer")
+                        .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        // ASSERT
+        Assertions.assertEquals(201, res.getStatus());
+        Assertions.assertEquals("application/json", res.getContentType());
+    }
+
+    @Test
+    void deveriaRetornarDadosCorretosNoJsonDeTransfer() throws Exception {
+        // ARRANGE
+        var json = """
+                {
+                    "sourceAccountNumber": 12345,
+                    "receiverAccountNumber": 12346,
+                    "amount": 200
+                }
+                    """;
+
+        // ACT + ASSERT
+        var res = mvc.perform(
+                MockMvcRequestBuilders.post("/transaction/transfer")
+                        .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath(
+                        "$.sourceAccountNumber.number",
+                        Matchers.equalTo(12346)))
+                .andExpect(MockMvcResultMatchers.jsonPath(
+                                "$.receiverAccountNumber.number",
+                                Matchers.equalTo(12346)))
+                .andExpect(MockMvcResultMatchers.jsonPath(
+                        "$.amount", Matchers.equalTo(200)));
+    }
+
 }
