@@ -1,7 +1,7 @@
 spring.application.name=bankapi
 server.port=8081
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/db_bankapi
+spring.datasource.url=jdbc:postgresql://localhost:5432/db_bankapi1
 spring.datasource.username=postgres
 spring.datasource.password=postgres
 
